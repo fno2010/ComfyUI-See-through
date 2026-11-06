@@ -25,59 +25,26 @@ print("[SeeThrough] nodes.py: comfy imports OK", flush=True)
 
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 SEETHROUGH_ROOT_DIR = os.path.join(CURRENT_DIR, "see-through")
-SEETHROUGH_COMMON_DIR = os.path.join(SEETHROUGH_ROOT_DIR, "common")
 
 print(f"[SeeThrough] CURRENT_DIR = {CURRENT_DIR}", flush=True)
-print(f"[SeeThrough] SEETHROUGH_COMMON_DIR = {SEETHROUGH_COMMON_DIR}", flush=True)
-print(f"[SeeThrough] common dir exists = {os.path.isdir(SEETHROUGH_COMMON_DIR)}", flush=True)
-
-# Mock pycocotools if not installed (only used for mask RLE, not needed here)
-try:
-    import pycocotools  # noqa: F401
-    print("[SeeThrough] pycocotools found", flush=True)
-except ImportError:
-    print("[SeeThrough] pycocotools not found, installing mock...", flush=True)
-    import types as _types
-    _mock_pycocotools = _types.ModuleType("pycocotools")
-    _mock_mask = _types.ModuleType("pycocotools.mask")
-    _mock_pycocotools.mask = _mock_mask
-    sys.modules["pycocotools"] = _mock_pycocotools
-    sys.modules["pycocotools.mask"] = _mock_mask
-
-if SEETHROUGH_COMMON_DIR not in sys.path:
-    sys.path.insert(0, SEETHROUGH_COMMON_DIR)
-    print(f"[SeeThrough] Added to sys.path: {SEETHROUGH_COMMON_DIR}", flush=True)
+print(f"[SeeThrough] SEETHROUGH_ROOT_DIR = {SEETHROUGH_ROOT_DIR}", flush=True)
 
 if SEETHROUGH_ROOT_DIR not in sys.path:
-    sys.path.insert(1, SEETHROUGH_ROOT_DIR)
+    sys.path.insert(0, SEETHROUGH_ROOT_DIR)
     print(f"[SeeThrough] Added to sys.path: {SEETHROUGH_ROOT_DIR}", flush=True)
-
-_st_conflict_backup = {}
-for _prefix in ("utils", "modules"):
-    for _key in list(sys.modules.keys()):
-        if _key == _prefix or _key.startswith(_prefix + "."):
-            _st_conflict_backup[_key] = sys.modules.pop(_key)
-if _st_conflict_backup:
-    print(f"[SeeThrough] Temporarily removed {len(_st_conflict_backup)} conflicting sys.modules entries: "
-          f"{list(_st_conflict_backup.keys())[:10]}{'...' if len(_st_conflict_backup) > 10 else ''}", flush=True)
 
 print("[SeeThrough] Importing see-through modules...", flush=True)
 import cv2
 from safetensors.torch import load_file
 
-from modules.layerdiffuse.diffusers_kdiffusion_sdxl import KDiffusionStableDiffusionXLPipeline
-from modules.layerdiffuse.layerdiff3d import UNetFrameConditionModel
-from modules.layerdiffuse.vae import TransparentVAE
-from modules.marigold import MarigoldDepthPipeline
-from utils.cv import center_square_pad_resize, img_alpha_blending, smart_resize
-from utils.torchcv import cluster_inpaint_part
+from seethrough_modules.layerdiffuse.diffusers_kdiffusion_sdxl import KDiffusionStableDiffusionXLPipeline
+from seethrough_modules.layerdiffuse.layerdiff3d import UNetFrameConditionModel
+from seethrough_modules.layerdiffuse.vae import TransparentVAE
+from seethrough_modules.marigold import MarigoldDepthPipeline
+from seethrough_utils.cv import center_square_pad_resize, img_alpha_blending, smart_resize
+from seethrough_utils.torchcv import cluster_inpaint_part
 
 print("[SeeThrough] All see-through imports OK", flush=True)
-
-for _key, _mod in _st_conflict_backup.items():
-    if _key not in sys.modules:
-        sys.modules[_key] = _mod
-del _st_conflict_backup
 
 DEFAULT_LAYERDIFF_REPO = "layerdifforg/seethroughv0.0.2_layerdiff3d"
 DEFAULT_LAYERDIFF_NF4_REPO = "24yearsold/seethroughv0.0.2_layerdiff3d_nf4"

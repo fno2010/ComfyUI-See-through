@@ -5,17 +5,16 @@ import numpy as np
 from pathlib import Path
 import shutil
 import sys
-sys.path.append(osp.dirname(osp.dirname(osp.abspath(__file__))))
 
 from PIL import Image
 from  tqdm import tqdm
 import click
 import cv2
 
-from utils.cv import mask2rle, rle2mask, mask_xyxy
-from utils.io_utils import load_exec_list, find_all_files_recursive, find_all_files_with_name, pil_ensure_rgb, imglist2imgrid, imread, imwrite, json2dict, save_tmp_img, dict2json
-from utils.sampler import NameSampler
-from utils.visualize import visualize_segs, visualize_segs_with_labels, visualize_pos_keypoints
+from seethrough_utils.cv import mask2rle, rle2mask, mask_xyxy
+from seethrough_utils.io_utils import load_exec_list, find_all_files_recursive, find_all_files_with_name, pil_ensure_rgb, imglist2imgrid, imread, imwrite, json2dict, save_tmp_img, dict2json
+from seethrough_utils.sampler import NameSampler
+from seethrough_utils.visualize import visualize_segs, visualize_segs_with_labels, visualize_pos_keypoints
 from live2d.scrap_model import Live2DScrapModel, VALID_BODY_PARTS_V1, VALID_BODY_PARTS_V2, compose_mask_from_drawables, init_drawable_visible_map, load_detected_character, load_pos_estimation
 
 

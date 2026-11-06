@@ -1,6 +1,13 @@
 # ComfyUI-See-through
 
-A ComfyUI plugin that wraps [See-through](https://github.com/shitagaki-lab/see-through) — an AI system that decomposes a single anime illustration into manipulatable 2.5D layer-decomposed models with depth ordering, ready for Live2D workflows.
+A maintained fork of `jtydhr88/ComfyUI-See-through`, wrapping
+[See-through](https://github.com/shitagaki-lab/see-through) — an AI system that
+decomposes a single anime illustration into manipulatable 2.5D layer-decomposed
+models with depth ordering, ready for Live2D workflows.
+
+This fork vendors See-through upstream `df019de` (2026-10-06), removes the
+generic `utils`/`modules` import conflicts, and keeps the ComfyUI integration
+compatible with the current torch/CUDA stack. See [UPSTREAM.md](UPSTREAM.md).
 
 [中文说明](README_CN.md)
 
@@ -47,12 +54,15 @@ Restart ComfyUI. The **SeeThrough** nodes will appear under the `SeeThrough` cat
 
 ### Dependencies
 
-Only 4 additional Python packages beyond ComfyUI's base:
+Additional Python packages beyond ComfyUI's base:
 
 - `diffusers` — Hugging Face diffusion pipeline
 - `accelerate` — Model loading acceleration
+- `peft` — PEFT support required by the vendored diffusers stack
 - `opencv-python` — Image processing
 - `scikit-learn` — KMeans clustering for depth-based layer splitting
+- `matplotlib` — Marigold depth colorization
+- `bitsandbytes` (optional, see `requirements-nf4.txt`) — NF4 quantization
 
 ### Models
 

@@ -13,7 +13,7 @@ from qtpy.QtCore import Signal, QSize, Qt
 from qtpy.QtGui import QGuiApplication, QContextMenuEvent, QIcon, QCloseEvent, QKeySequence
 import py7zr
 
-from utils.io_utils import get_all_segcls
+from seethrough_utils.io_utils import get_all_segcls
 from . import shared_widget as SW
 from .canvas import Canvas, DrawableItem
 from .misc import parse_stylesheet, QKEY

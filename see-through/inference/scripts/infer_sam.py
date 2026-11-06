@@ -13,7 +13,7 @@ import cv2
 import sys
 sys.path.append(osp.dirname(osp.dirname(osp.abspath(__file__))))
 
-from utils.io_utils import load_exec_list, find_all_imgs
+from seethrough_utils.io_utils import load_exec_list, find_all_imgs
 
 
 

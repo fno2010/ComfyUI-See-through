@@ -4,7 +4,7 @@ import sys
 import os
 sys.path.append(osp.dirname(osp.dirname(osp.abspath(__file__))))
 
-from utils.inference_utils import seg_wdepth, seg_wlr, seg_wdepth_psd, seg_wlr_psd
+from seethrough_utils.inference_utils import seg_wdepth, seg_wlr, seg_wdepth_psd, seg_wlr_psd
 import click
 
 @click.group()

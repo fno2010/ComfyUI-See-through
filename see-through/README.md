@@ -3,6 +3,9 @@ See-through: Single-image Layer Decomposition for Anime Characters
 ---
 
 <a href='https://arxiv.org/abs/2602.03749'><img src='https://img.shields.io/badge/arXiv-2602.03749-b31b1b.svg'></a>
+<a href='https://dl.acm.org/doi/10.1145/3799902.3811209'><img src='https://img.shields.io/badge/ACM-Digital%20Library-0085CA.svg'></a>
+<a href='https://huggingface.co/spaces/24yearsold/see-through-demo'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Space-PSD%20Inference%20Demo-blue'></a>
+<a href='https://modelscope.cn/studios/ljsabc/See-Through'><img src='https://img.shields.io/badge/ModelScope-Demo%2F在线演示-624aff.svg'></a>
 
 
 _**[Jian Lin](https://github.com/dmMaze)<sup>1</sup>, [Chengze Li](https://moeka.me)<sup>1*</sup>, [Haoyun Qin](https://haoyunqin.com/)<sup>2,3,4</sup>, Kwun Wang Chan<sup>1</sup>, [Yanghua Jin](https://github.com/Aixile)<sup>3</sup>, [Hanyuan Liu](https://github.com/hyliu)<sup>1</sup>, Stephen Chun Wang Choy<sup>1</sup>, Xueting Liu<sup>1</sup>**_
@@ -11,15 +14,19 @@ _**[Jian Lin](https://github.com/dmMaze)<sup>1</sup>, [Chengze Li](https://moeka
 
 <sup>*</sup>Corresponding author
 
-Conditionally accpted to appear in *ACM SIGGRAPH 2026 Conference Proceedings*.
+Published in *ACM SIGGRAPH 2026 Conference Papers*.
 
 </div>
 
 ---
 
+> **Notice:** This is an open-source research project. We have not set up any paid service for this tool. If you encounter a website charging for this functionality, it is not from us. Use at your own risk.
+>
+> **声明：** 本项目为开源研究项目，我们未开设任何付费服务。如遇到以此功能收费的网站，均与我们无关，请注意甄别。
+
 ## TL;DR
 
-We introduce a framework that automates the transformation of static anime illustrations into manipulatable **2.5D models**. Our approach decomposes a single image into fully inpainted, semantically distinct layers with inferred drawing orders — up to **24 layers** including hair, face, eyes, clothing, accessories, and more.
+We introduce a framework that automates the transformation of static anime illustrations into manipulatable **2.5D models**. Our approach decomposes a single image into fully inpainted, semantically distinct layers with inferred drawing orders — up to **23 layers** including hair, face, eyes, clothing, accessories, and more.
 
 ![Our Representative Image](common/assets/representative.jpg)
 
@@ -42,8 +49,14 @@ conda create -n see_through python=3.12 -y
 conda activate see_through
 
 # 2. Install PyTorch (CUDA 12.8)
+# aarch64 users: the pinned versions below may not be available; use torch>=2.9.0 instead
 pip install torch==2.8.0+cu128 torchvision==0.23.0+cu128 torchaudio==2.8.0+cu128 \
   --index-url https://download.pytorch.org/whl/cu128
+
+# AMD ROCm users: install the ROCm wheel set that matches your local ROCm runtime instead.
+# For example, on ROCm 7.2:
+# pip install torch torchvision torchaudio \
+#   --index-url https://download.pytorch.org/whl/rocm7.2
 
 # 3. Install dependencies (includes common utilities and annotators)
 pip install -r requirements.txt
@@ -87,7 +100,20 @@ ln -sf common/assets assets
 |----------|-------------|
 | `inference/demo/bodypartseg_sam.ipynb` | Interactive body part segmentation demo with visualization (19-parts) |
 
-> For the definition of complete body tags, refer to [scrap_model.py](./common/live2d/scrap_model.py). 
+> For the definition of complete body tags, refer to [scrap_model.py](./common/live2d/scrap_model.py).
+
+### Online Demo
+
+We have prepared [a Huggingface Space](https://huggingface.co/spaces/24yearsold/see-through-demo) with ZeroGPU, so that if you register with HuggingFace, you should be able to run 1-2 PSD extractions per day (approximately 2-3 mins each, at 1280 resolution).
+
+For users in Mainland China, we also provide a [ModelScope demo](https://modelscope.cn/studios/ljsabc/See-Through). It's completely free now, and supports slightly higher resolution than the HuggingFace demo. We will continue to maintain both demos to ensure accessibility for users worldwide.
+
+中国大陆用户可以使用[魔搭社区 ModelScope 在线演示](https://modelscope.cn/studios/ljsabc/See-Through)，目前完全免费，并且可以使用更高一点的分辨率。
+
+<img alt="image" src="https://github.com/user-attachments/assets/3f98f47b-e98b-4628-9859-8772cda69f93" />
+
+(Copyright [Tohoku Zunko Project](https://zunko.jp/)).
+
 
 ## Usage
 
@@ -95,8 +121,9 @@ ln -sf common/assets assets
 
 `inference_psd.py` runs the full See-through pipeline: it applies the **LayerDiff 3D** model
 for transparent layer generation and the fine-tuned **Marigold** model for pseudo-depth
-inference, then stratifies the character into up to **24 semantic layers** and exports a
-layered PSD file.
+inference, then stratifies the character into up to **23 semantic layers** and exports a
+layered PSD file. Note that the separation for head and body are in two continuous stages, which
+may lead to a longer time than the original model mentioned in the paper. 
 
 ```bash
 # Decompose a single image into a layered PSD
@@ -114,7 +141,7 @@ Output is saved to `workspace/layerdiff_output/` by default. Each result include
 - A layered `.psd` file with semantically separated layers
 - Intermediate depth maps and segmentation masks
 
-> **Note:** This uses our most recent model with 24-layer body part separation (V3).
+> **Note:** This uses our most recent model with 23-layer body part separation (V3).
 
 
 Once you have finished the layer splitting, you can further process the PSD with the scripts in `inference/scripts/heuristic_partseg.py` for depth-based or left-right stratification.
@@ -127,6 +154,49 @@ python inference/scripts/heuristic_partseg.py seg_wdepth --srcp workspace/test_s
 
 #Left-right split
 python inference/scripts/heuristic_partseg.py seg_wlr --srcp workspace/test_samples_output/PV_0047_A0020_wdepth.psd --target_tags handwear-1
+```
+
+### Low-VRAM Users
+
+The default pipeline runs at bf16 precision and requires approximately 12-16 GB of VRAM at 1280 resolution.
+
+**12 GB GPUs**: Enable group offload to reduce peak VRAM to ~10 GB at 1280 resolution:
+
+```bash
+python inference/scripts/inference_psd.py \
+  --srcp assets/test_image.png \
+  --save_to_psd \
+  --group_offload
+```
+
+**8 GB GPUs**: Use the NF4 quantized pipeline, which uses 4-bit quantized model weights. This achieves ~8 GB peak VRAM at 1280 resolution, and can be further reduced by lowering the resolution with group offload:
+
+```bash
+# Install bitsandbytes (one-time)
+pip install -r requirements-inference-bnb.txt
+
+# Run with NF4 quantization (default: group_offload on, depth resolution 720)
+python inference/scripts/inference_psd_quantized.py \
+  --srcp assets/test_image.png \
+  --save_to_psd
+
+# For even lower VRAM, reduce layerdiff resolution to 1024
+python inference/scripts/inference_psd_quantized.py \
+  --srcp assets/test_image.png \
+  --save_to_psd \
+  --resolution 1024
+```
+
+The quantized models are hosted on HuggingFace and downloaded automatically on first run. Quality is close to the full-precision model (PSNR ~30 dB, SSIM ~0.96 vs bf16 baseline).
+
+> **Note:** Group offload trades speed for VRAM savings (roughly 1.5x slower). NF4 quantization has minimal speed overhead but reduces model weight memory.
+
+**8 GB GPUs**: Block swap pipeline achieves ~8 GB peak VRAM at 1280 resolution with bf16 precision:
+
+```bash
+python inference/scripts/inference_psd_blockswap.py \
+  --srcp assets/test_image.png \
+  --save_to_psd \
 ```
 
 ### Preparing the dataset for training (e.g., Live2D Parsing)
@@ -146,7 +216,9 @@ Once you have prepared your data, you may go ahead with the user interfaces. Ref
 
 ### Training
 
-We have our training scripts ready, but we are still working on the documentation. We will release them no later than 2026/04/12. Please stay tuned!
+Training scripts for all models (LayerDiff, Marigold depth, VAE, body part segmentation)
+are available in [`training/`](training/README.md), along with configs and data pipeline
+utilities. Our training was conducted on 8x NVIDIA H200 GPUs.
 
 
 ## Community Support
@@ -155,14 +227,20 @@ We welcome community contributions and third-party integrations!
 
 If you build tools, extensions, or workflows on top of this project, please let us know by opening an issue or pull request — we would be happy to feature your work here.
 
-We also seek for i18n help for this project. Your help will be highly appreciated. 
+- [ComfyUI-See-through](https://github.com/jtydhr88/ComfyUI-See-through) by [@jtydhr88](https://github.com/jtydhr88) — Integration for ComfyUI, with node-based workflow and in-browser PSD export. Thank you for the amazing work!
+- [PachiPakuGen](https://github.com/kazuya-bros/PachiPakuGen) by [@kazuya-bros](https://github.com/kazuya-bros) — Desktop tool that takes See-Through's decomposed PSD output and generates animation materials (eye blinks, lip-sync mouth shapes) for [SpriTalk](https://kazuyabros.booth.pm/items/8102679), a talking-character animation tool. Visit their [Booth](https://kazuyabros.booth.pm/items/8102679) for the tool and demo videos!
+- [StretchyStudio](https://github.com/MangoLion/stretchystudio) — Free, in-browser 2D puppet animation tool that auto-rigs See-through's decomposed PSD layers, closing the gap between decomposition and a fully animatable character. Drop our PSD output directly into it and it just works. Check out their [Reddit thread](https://www.reddit.com/r/StableDiffusion/comments/1sjj7ta/free_opensource_tool_to_instantly_rig_and_animate/) and [live editor](https://editor.stretchy.studio).
+- [Anime2.5DRig](https://github.com/852wa/Anime2.5DRig) by [@8co28](https://x.com/8co28) — Free, in-browser tool that turns a layered PSD into a live 2.5D VTuber-style avatar (blinking, lip-sync, hair physics) the moment you drop it in — and its required layer naming follows See-through's PSD convention, so our output works mostly out of the box. Try the [live demo](https://852wa.github.io/Anime2.5DRig/) and see the [announcement tweet](https://x.com/8co28/status/2073298141726810273)!
+- [PNGAL](https://github.com/1mm-module/PNGAL) by [@1mm-module](https://github.com/1mm-module) — Windows-local tool that turns a transparent PNG into game-ready standing-character animation: generate eye/mouth expression variants, split into a semantic PSD with See-through, then set blinking, lip-sync and swaying motion and export PSD, WebM, MP4, GIF, or a sprite sheet. Its one-click setup pulls in a portable Python, a pinned ComfyUI, See-through and all required models into a single self-contained folder. Impressive engineering — thank you!
+
+We also seek i18n help for this project. Your help will be highly appreciated.
 
 
 ## Discussion: Is this Image-to-Live2D?
 
 We don't think so — at least, not yet.
 
-While we produces 2.5D layer decompositions from a single image,
+While we produce 2.5D layer decompositions from a single image,
 the full Image-to-Live2D pipeline requires significantly more:
 
 1. **Finer artistic decomposition.** Live2D models demand layers designed with specific
@@ -181,6 +259,14 @@ the full Image-to-Live2D pipeline requires significantly more:
 That said, we believe our decomposition can serve as a useful **starting point** for
 Live2D artists by eliminating some of the most tedious part of the workflow, such as manual segmentation
 and occluded region inpainting.
+
+## Changelog
+
+**2026-04-14**
+- Released training scripts, configs, and data pipeline for all models (LayerDiff, Marigold depth, VAE, body part segmentation). This is the V3 model with 23 body-part tag training.
+
+**2026-04-02**
+- Multiple memory optimizations; added suggestions for low-VRAM users (group offload, NF4 quantization).
 
 ## Acknowledgements
 
@@ -208,10 +294,16 @@ We thank the authors of the following projects that made this work possible:
 If you find this work useful, please cite:
 
 ```bibtex
-@article{lin2026seethrough,
-  title={See-through: Single-image Layer Decomposition for Anime Characters},
+@inproceedings{lin2026seethrough,
   author={Lin, Jian and Li, Chengze and Qin, Haoyun and Chan, Kwun Wang and Jin, Yanghua and Liu, Hanyuan and Choy, Stephen Chun Wang and Liu, Xueting},
-  journal={arXiv preprint arXiv:2602.03749},
-  year={2026}
+  title={See-through: Single-image Layer Decomposition for Anime Characters},
+  booktitle={Proceedings of the Special Interest Group on Computer Graphics and Interactive Techniques Conference Conference Papers},
+  series={SIGGRAPH Conference Papers '26},
+  publisher={Association for Computing Machinery},
+  address={New York, NY, USA},
+  year={2026},
+  pages={1--11},
+  doi={10.1145/3799902.3811209},
+  url={https://doi.org/10.1145/3799902.3811209}
 }
 ```

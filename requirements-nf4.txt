@@ -1,0 +1,2 @@
+# Optional: NF4 quantized LayerDiff/Marigold paths.
+bitsandbytes>=0.49.2

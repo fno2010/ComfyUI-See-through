@@ -32,3 +32,9 @@ coverage
 __pycache__
 
 node.zip
+# See-through local data
+workspace/
+assets
+*.psd
+*.psb
+models/

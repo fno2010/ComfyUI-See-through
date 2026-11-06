@@ -13,9 +13,9 @@ import cv2
 import numpy as np
 from einops import reduce
 
-from utils.io_utils import find_all_files_recursive, get_last_modified_file, json2dict, dict2json, pil_pad_square, imwrite
-from utils.visualize import visualize_pos_keypoints, coco_parts, coco_parts_dict
-from utils.cv import img_alpha_blending, bbox_intersection, rle2mask
+from seethrough_utils.io_utils import find_all_files_recursive, get_last_modified_file, json2dict, dict2json, pil_pad_square, imwrite
+from seethrough_utils.visualize import visualize_pos_keypoints, coco_parts, coco_parts_dict
+from seethrough_utils.cv import img_alpha_blending, bbox_intersection, rle2mask
 
 
 

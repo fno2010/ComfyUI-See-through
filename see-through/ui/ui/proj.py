@@ -4,7 +4,7 @@ import os.path as osp
 from typing import Tuple, Union, List, Dict
 
 from .logger import logger as LOGGER
-from utils.io_utils import find_all_imgs, load_image, NumpyEncoder, find_all_files_with_name
+from seethrough_utils.io_utils import find_all_imgs, load_image, NumpyEncoder, find_all_files_with_name
 from .structures import Instance, load_instance_list, save_instance_list
 from .misc import ImgnameNotInProjectException, ProjectLoadFailureException, ProjectDirNotExistException, ProjectNotSupportedException
 from .ui_config import pcfg
@@ -131,109 +131,9 @@ class ProjSeg:
             if metadata is None:
                 metadata = {}
 
-            cleaned = metadata.get('cleaned', False)
             self.is_current_page_valid = metadata.get('is_valid', False)
             self.is_incomplete = metadata.get('is_incomplete', False)
 
-            if parsing_src is not None and 'bodyparsingv3' in parsing_src and not metadata.get('v3_cleaned', False):
-                for d in self.l2dmodel.drawables:
-                    if d.did is None:
-                        continue
-                    if 'eye_ball' in d.did.lower():
-                        d.set_tag('irides')
-                    if 'brow' in d.did.lower():
-                        d.set_tag('eyebrow')
-                    if 'eyewhite' in d.did.lower():
-                        d.set_tag('eyebg')
-                    if 'mouth' in d.did.lower():
-                        d.set_tag('mouth')
-                    if 'eyelash' in d.did.lower():
-                        d.set_tag('eyelash')
-                    if 'tooth' in d.did.lower():
-                        d.set_tag('mouth')
-                metadata['v3_cleaned'] = True
-
-            if not cleaned:
-                did_contain_arms = False
-                for d in self.l2dmodel.drawables:
-                    if d.did is None:
-                        continue
-                    if 'arm' in d.did.lower():
-                        did_contain_arms = True
-
-                for d in self.l2dmodel.drawables:
-                    if d.did is None:
-                        continue
-                    did_lower = d.did.lower()
-                    if d.tag == 'objects':
-                        continue
-                    if d.tag is None:
-                        if 'hair' in did_lower:
-                            d.set_tag('hair')
-                        elif 'arm' in did_lower:
-                            d.set_tag('handwear')
-                        elif 'mouth' in did_lower:
-                            d.set_tag('mouth')
-                        elif 'body' in did_lower:
-                            if 'body2' in did_lower:
-                                d.set_tag('bottomwear')
-                            else:
-                                d.set_tag('topwear')
-                        elif 'face' in did_lower:
-                            d.set_tag('face')
-                        elif 'ear' in did_lower:
-                            d.set_tag('ears')
-                        elif 'eye' in did_lower:
-                            d.set_tag('eyes')
-                        elif 'leg' in did_lower:
-                            d.set_tag('legwear')
-                    elif d.tag == 'hair':
-                        if 'face' in did_lower:
-                            d.set_tag('face')
-                        elif 'arm' in did_lower:
-                            d.set_tag('handwear')
-                        elif 'body' in did_lower and 'hair' not in did_lower:
-                            d.set_tag('topwear')
-                    elif d.tag == 'handwear':
-                        if did_contain_arms:
-                            if 'body' in did_lower and 'arm' not in did_lower:
-                                if 'body2' in did_lower:
-                                    d.set_tag('bottomwear')
-                                else:
-                                    d.set_tag('topwear')
-                        if 'hair' in did_lower:
-                            d.set_tag('hair')
-                    elif d.tag == 'topwear':
-                        if 'hair' in did_lower:
-                            d.set_tag('headwear')
-                        elif 'arm' in did_lower:
-                            d.set_tag('handwear')
-                    elif d.tag == 'bottomwear':
-                        if 'hair' in did_lower:
-                            d.set_tag('headwear')
-                    else:
-                        if 'arm' in did_lower:
-                            d.set_tag('handwear')
-                    if d.tag in {'legwear', 'topwear', 'bottomwear', 'hair', 'face', None} and 'ear' in did_lower:
-                        d.set_tag('ears')
-                    elif d.tag in {'legwear', 'topwear', 'bottomwear', 'hair', 'face', None} and 'neck' in did_lower:
-                        d.set_tag('neck')
-                    elif d.tag in {'legwear', 'topwear', 'bottomwear', 'hair', None} and ('hand' in did_lower or 'arm' in did_lower):
-                        d.set_tag('handwear')
-                    elif d.tag in {'legwear', 'topwear', 'bottomwear', 'hair', None} and 'eye' in did_lower:
-                        d.set_tag('eyes')
-                    elif d.tag in {'legwear', 'topwear', 'bottomwear', 'hair', None} and 'mouth' in did_lower:
-                        d.set_tag('mouth')
-                    elif d.tag in {'legwear', 'topwear', 'bottomwear', 'hair', 'face', None} and 'nose' in did_lower:
-                        d.set_tag('nose')
-                    else:
-                        model_base_dir = osp.basename(osp.dirname(osp.dirname(self.current_model)))
-                        if model_base_dir in ['KONOTSUBA_jxl_crop', 'sekai_jxl_crop']:
-                            if d.tag in {'legwear', 'topwear', 'bottomwear', 'hair', 'face', None} and 'eye' in did_lower:
-                                d.set_tag('eyes')
-                            elif d.tag in {'legwear', 'topwear', 'bottomwear', 'hair', 'face', None} and 'mouth' in did_lower:
-                                d.set_tag('mouth')
-                        
         else:
             self.current_model = None
             del self.l2dmodel

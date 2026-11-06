@@ -9,12 +9,11 @@ from einops import reduce
 import click
 import cv2
 import sys
-sys.path.append(osp.dirname(osp.dirname(osp.abspath(__file__))))
 
-from utils.io_utils import load_exec_list, pil_pad_square, pil_ensure_rgb, imglist2imgrid, find_all_files_with_name, dict2json, json2dict, load_image, save_tmp_img
+from seethrough_utils.io_utils import load_exec_list, pil_pad_square, pil_ensure_rgb, imglist2imgrid, find_all_files_with_name, dict2json, json2dict, load_image, save_tmp_img
 from live2d.scrap_model import Live2DScrapModel, compose_from_drawables, load_detected_character, init_drawable_visible_map, Drawable
-from utils.visualize import pil_draw_text, visualize_segs, VALID_FACE_GROUPS, FACE_LABEL2NAME, visualize_facedet_output, LEFT_EYEBROW, RIGHT_EYEBROW, show_factorization_on_image
-from utils.cv import mask2rle, rle2mask
+from seethrough_utils.visualize import pil_draw_text, visualize_segs, VALID_FACE_GROUPS, FACE_LABEL2NAME, visualize_facedet_output, LEFT_EYEBROW, RIGHT_EYEBROW, show_factorization_on_image
+from seethrough_utils.cv import mask2rle, rle2mask
 
 exclude_cls = \
 {
@@ -322,6 +321,18 @@ def assign_tag_by_path(lmodel: Live2DScrapModel):
     for d in lmodel.drawables:
         if d.did is None:
             continue
+        if 'eye_ball' in d.did.lower():
+            d.set_tag('irides')
+        if 'brow' in d.did.lower():
+            d.set_tag('eyebrow')
+        if 'eyewhite' in d.did.lower():
+            d.set_tag('eyewhite')
+        if 'mouth' in d.did.lower():
+            d.set_tag('mouth')
+        if 'eyelash' in d.did.lower():
+            d.set_tag('eyelash')
+        if 'tooth' in d.did.lower():
+            d.set_tag('mouth')
         if 'arm' in d.did.lower():
             did_contain_arms = True
 
