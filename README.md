@@ -176,3 +176,10 @@ PSD generation uses [ag-psd](https://github.com/nicasiomg/ag-psd) in the browser
 ## License
 
 MIT
+
+## Fork status
+
+This fork is maintained locally at `/Develop/ComfyUI-See-through` and mirrored
+to `fno2010/ComfyUI-See-through`. The vendored See-through source is
+`df019de`; the node wrapper keeps the original NF4/group-offload features and
+adds namespace isolation. See [UPSTREAM.md](UPSTREAM.md) for the sync policy.

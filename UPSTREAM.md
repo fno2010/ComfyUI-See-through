@@ -28,6 +28,19 @@ ComfyUI custom-node distribution is expected to be a self-contained directory.
 - Kept upstream scheduler configuration and process-cuts fixes from
   `df019de` instead of the older vendored snapshot.
 
+## Verification
+
+The fork has been import-tested against:
+
+- ComfyUI environment: `torch 2.13.0+cu130`, Python 3.12
+- `diffusers 0.37.0`, `accelerate 1.13.0`, `peft 0.21.2`,
+  `scikit-learn 1.9.1`, `matplotlib 3.11.2`
+- A pre-existing fake `utils` module in `sys.modules` no longer interferes
+  with node import; all seven nodes register.
+
+Model inference has not yet been run in this fork because the LayerDiff/Marigold
+weights are not installed locally.
+
 ## Syncing upstream
 
 The upstream project is tracked as the `official` git remote:
