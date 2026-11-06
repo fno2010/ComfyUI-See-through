@@ -83,7 +83,7 @@ if __name__ == '__main__':
     use_progressbar = not args.no_progressbar
 
     src_list = load_exec_list(args.src_list)
-    from utils.torch_utils import seed_everything
+    from seethrough_utils.torch_utils import seed_everything
     # seed_everything(1)
     # random.shuffle(src_list)
     # src_list = src_list[:470]

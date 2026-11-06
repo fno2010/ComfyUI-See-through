@@ -415,7 +415,7 @@ def visualize_batch(args, batch, model, dataset, accelerator: Accelerator, globa
                 rgb_cond = img2tensor(rgb_cond, normalize=True, dtype=weight_dtype, device=accelerator.device)
             noise_step = torch.tensor([ii], dtype=torch.long, device=accelerator.device)
             recon = model(img.to(dtype=weight_dtype), scheduler=noise_scheduler, noise_step=0, noise=noise, rgb_cond=rgb_cond)
-            from utils.io_utils import save_tmp_img
+            from seethrough_utils.io_utils import save_tmp_img
             # save_tmp_img(np.concatenate([checkerboard_vis(img), checkerboard_vis(recon)], axis=1))
             return np.concatenate([checkerboard_vis(img), checkerboard_vis(recon)], axis=1)
         

@@ -34,18 +34,18 @@ def test_layerdiff(config, rank_to_worldsize):
     import random
 
     from safetensors.torch import load_file
-    from utils.cv import visualize_rgba, center_square_pad_resize
-    from utils.torch_utils import init_model_from_pretrained, tensor2img, seed_everything
-    from modules.layerdiffuse.vae import TransparentVAEDecoder, TransparentVAEEncoder, vae_encode
-    from modules.layerdiffuse.utils import patch_transvae_sd, patch_unet_convin
-    from modules.layerdiffuse.diffusers_kdiffusion_sdxl import KDiffusionStableDiffusionXLPipeline
-    from modules.layerdiffuse.layerdiff3d import UNetFrameConditionModel
+    from seethrough_utils.cv import visualize_rgba, center_square_pad_resize
+    from seethrough_utils.torch_utils import init_model_from_pretrained, tensor2img, seed_everything
+    from seethrough_modules.layerdiffuse.vae import TransparentVAEDecoder, TransparentVAEEncoder, vae_encode
+    from seethrough_modules.layerdiffuse.utils import patch_transvae_sd, patch_unet_convin
+    from seethrough_modules.layerdiffuse.diffusers_kdiffusion_sdxl import KDiffusionStableDiffusionXLPipeline
+    from seethrough_modules.layerdiffuse.layerdiff3d import UNetFrameConditionModel
     from live2d.scrap_model import VALID_BODY_PARTS_V2
-    from utils.io_utils import load_exec_list
+    from seethrough_utils.io_utils import load_exec_list
 
     from diffusers.pipelines.stable_diffusion_xl.pipeline_stable_diffusion_xl import retrieve_timesteps, rescale_noise_cfg
     from train.dataset_layerdiff import LayerDiffDataset
-    from utils.torch_utils import img2tensor, tensor2img
+    from seethrough_utils.torch_utils import img2tensor, tensor2img
     from transformers import CLIPTextModel, CLIPTokenizer, CLIPTextModelWithProjection
     from diffusers import (
         AutoencoderKL,
@@ -273,10 +273,10 @@ def test_layerdiff(config, rank_to_worldsize):
 def test_layerdiff_vae(config, save_dir, shuffle):
 
     from train.dataset_layerdiff import LayerDiffDataset
-    from utils.torch_utils import img2tensor, tensor2img
-    from utils.torch_utils import init_model_from_pretrained, tensor2img, seed_everything
-    from modules.layerdiffuse.vae import TransparentVAEDecoder, TransparentVAEEncoder, vae_encode
-    from modules.layerdiffuse.utils import patch_unet_convin, patch_transvae_sd
+    from seethrough_utils.torch_utils import img2tensor, tensor2img
+    from seethrough_utils.torch_utils import init_model_from_pretrained, tensor2img, seed_everything
+    from seethrough_modules.layerdiffuse.vae import TransparentVAEDecoder, TransparentVAEEncoder, vae_encode
+    from seethrough_modules.layerdiffuse.utils import patch_unet_convin, patch_transvae_sd
     from diffusers import AutoencoderKL
     
     seed_everything(1)
@@ -352,13 +352,13 @@ def test_layerdiff_vae(config, save_dir, shuffle):
 @click.option('--config')
 @click.option('--rank_to_worldsize', default=None)
 def marigold_blend(config, rank_to_worldsize):
-    from modules.marigold import MarigoldDepthPipeline
-    from modules.marigold.marigold_depth_pipeline import encode_empty_text, encode_argb_list
-    from modules.layerdiffuse.layerdiff3d import UNetFrameConditionModel
+    from seethrough_modules.marigold import MarigoldDepthPipeline
+    from seethrough_modules.marigold.marigold_depth_pipeline import encode_empty_text, encode_argb_list
+    from seethrough_modules.layerdiffuse.layerdiff3d import UNetFrameConditionModel
     from live2d.scrap_model import VALID_BODY_PARTS_V2
-    from utils.cv import img_alpha_blending, center_square_pad_resize, argb2rgba
-    from utils.torch_utils import img2tensor, tensor2img
-    from utils.io_utils import load_exec_list
+    from seethrough_utils.cv import img_alpha_blending, center_square_pad_resize, argb2rgba
+    from seethrough_utils.torch_utils import img2tensor, tensor2img
+    from seethrough_utils.io_utils import load_exec_list
     # model = MarigoldDepthPipeline.from
     config = OmegaConf.load(config)
 

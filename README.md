@@ -15,7 +15,7 @@ Paper: [arxiv:2602.03749](https://arxiv.org/abs/2602.03749) (Conditionally accep
 
 ## Features
 
-- **Single-Image Layer Decomposition** — Input one anime character image, get up to 24 semantic transparent layers (hair, face, eyes, clothing, accessories, etc.)
+- **Single-Image Layer Decomposition** — Input one anime character image, get up to 23 semantic transparent layers (hair, face, eyes, clothing, accessories, etc.)
 - **Depth Estimation** — Automatic depth map generation for each layer via fine-tuned Marigold, establishing correct drawing order
 - **Smart Splitting** — Eyes, ears, handwear split into left/right; hair split into front/back via depth clustering
 - **PSD Export** — Download layered PSD files directly from the browser (frontend ag-psd, no Python dependency)

@@ -486,8 +486,8 @@ TARGET_FRAME_SIZE = 1024
 def parse_render_body_samples(exec_list, bg_list, save_dir, rank_to_worldsize):
 
     from live2d.scrap_model import animal_ear_detected, Drawable
-    from utils.cv import fgbg_hist_matching, quantize_image, random_crop, rle2mask, mask2rle, img_alpha_blending, resize_short_side_to, batch_save_masks, batch_load_masks
-    from utils.torch_utils import seed_everything
+    from seethrough_utils.cv import fgbg_hist_matching, quantize_image, random_crop, rle2mask, mask2rle, img_alpha_blending, resize_short_side_to, batch_save_masks, batch_load_masks
+    from seethrough_utils.torch_utils import seed_everything
 
     def _compose_body_samples(lmodel: Live2DScrapModel):
         '''
@@ -1039,8 +1039,8 @@ def parse_render_body_samples(exec_list, bg_list, save_dir, rank_to_worldsize):
 def parse_render_body_samples_wsegs(exec_list, bg_list, mask_name, save_dir, rank_to_worldsize):
 
     from live2d.scrap_model import animal_ear_detected, Drawable
-    from utils.cv import fgbg_hist_matching, quantize_image, random_crop, rle2mask, mask2rle, img_alpha_blending, resize_short_side_to, batch_save_masks, batch_load_masks
-    from utils.torch_utils import seed_everything
+    from seethrough_utils.cv import fgbg_hist_matching, quantize_image, random_crop, rle2mask, mask2rle, img_alpha_blending, resize_short_side_to, batch_save_masks, batch_load_masks
+    from seethrough_utils.torch_utils import seed_everything
 
     def _compose_body_samples(lmodel: Live2DScrapModel):
         '''
@@ -1176,7 +1176,7 @@ def parse_render_body_samples_wsegs(exec_list, bg_list, mask_name, save_dir, ran
             is_valid, masks, final_img = _compose_body_samples(lmodel,)
 
             reference_img = lmodel.final[..., :3]
-            from utils.visualize import visualize_pos_keypoints
+            from seethrough_utils.visualize import visualize_pos_keypoints
             savep = None
             # savep = osp.join('workspace/segs', osp.basename(model_dir) + '.png')
             # imwrite(savep, reference_img)
@@ -1255,9 +1255,9 @@ def render_face_samples(exec_list, bg_list, save_dir, rank_to_worldsize):
 
     TARGET_FRAME_SIZE = 2048
 
-    from utils.cv import fgbg_hist_matching, quantize_image, random_crop, img_bbox, img_alpha_blending, resize_short_side_to, batch_save_masks, batch_load_masks
-    from utils.torch_utils import seed_everything
-    from utils.visualize import FACE_LABEL2NAME
+    from seethrough_utils.cv import fgbg_hist_matching, quantize_image, random_crop, img_bbox, img_alpha_blending, resize_short_side_to, batch_save_masks, batch_load_masks
+    from seethrough_utils.torch_utils import seed_everything
+    from seethrough_utils.visualize import FACE_LABEL2NAME
 
     def _compose_face_samples(lmodel: Live2DScrapModel):
         '''
@@ -1474,7 +1474,7 @@ def dump_complete_lst(exec_list, savep):
 
     final_list = []
 
-    from utils.io_utils import load_exec_list
+    from seethrough_utils.io_utils import load_exec_list
 
     execp = osp.splitext(exec_list)[0]
     savep = execp + '_complete.txt'
@@ -1573,8 +1573,8 @@ def update_bodyparsing(exec_list, tgt_dir, parsing_name, tgt_parsing_name):
 def render_body_samples(exec_list, bg_list, mask_name, save_dir, rank_to_worldsize, save_suffix):
 
     from live2d.scrap_model import animal_ear_detected, Drawable, ImageProcessor, compose_from_drawables, VALID_BODY_PARTS_V3
-    from utils.cv import fgbg_hist_matching, quantize_image, random_crop, rle2mask, mask2rle, img_alpha_blending, resize_short_side_to, batch_save_masks, batch_load_masks
-    from utils.torch_utils import seed_everything
+    from seethrough_utils.cv import fgbg_hist_matching, quantize_image, random_crop, rle2mask, mask2rle, img_alpha_blending, resize_short_side_to, batch_save_masks, batch_load_masks
+    from seethrough_utils.torch_utils import seed_everything
 
     seed_everything(42)
 
@@ -1852,8 +1852,8 @@ def render_body_samples(exec_list, bg_list, mask_name, save_dir, rank_to_worldsi
 def render_simple_samples(exec_list, bg_list, save_dir, rank_to_worldsize, save_suffix):
 
     from live2d.scrap_model import animal_ear_detected, Drawable, ImageProcessor, compose_from_drawables
-    from utils.cv import fgbg_hist_matching, quantize_image, random_crop, rle2mask, mask2rle, img_alpha_blending, resize_short_side_to, batch_save_masks, batch_load_masks
-    from utils.torch_utils import seed_everything
+    from seethrough_utils.cv import fgbg_hist_matching, quantize_image, random_crop, rle2mask, mask2rle, img_alpha_blending, resize_short_side_to, batch_save_masks, batch_load_masks
+    from seethrough_utils.torch_utils import seed_everything
 
     seed_everything(42)
 
@@ -1899,7 +1899,7 @@ def render_simple_samples(exec_list, bg_list, save_dir, rank_to_worldsize, save_
             img = Image.open(p).convert('RGBA')
 
             if not is_pkl:
-                from annotators.wdv3_tagger import apply_wdv3_tagger
+                from seethrough_annotators.wdv3_tagger import apply_wdv3_tagger
                 img_input = pil_ensure_rgb(img)
                 img_input = img_input.resize((448, 448), resample=Image.Resampling.LANCZOS)
                 caption, taglist, ratings, character, general = apply_wdv3_tagger(img_input)

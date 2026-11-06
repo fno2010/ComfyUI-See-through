@@ -200,9 +200,9 @@ def render_face_samples(exec_list, bg_list, save_dir, rank_to_worldsize):
 
     TARGET_FRAME_SIZE = 2048
 
-    from utils.cv import fgbg_hist_matching, quantize_image, random_crop, img_bbox, img_alpha_blending, resize_short_side_to, batch_save_masks, batch_load_masks
-    from utils.torch_utils import seed_everything
-    from utils.visualize import FACE_LABEL2NAME
+    from seethrough_utils.cv import fgbg_hist_matching, quantize_image, random_crop, img_bbox, img_alpha_blending, resize_short_side_to, batch_save_masks, batch_load_masks
+    from seethrough_utils.torch_utils import seed_everything
+    from seethrough_utils.visualize import FACE_LABEL2NAME
 
     def _compose_face_samples(lmodel: Live2DScrapModel):
         '''
@@ -410,8 +410,8 @@ def get_tgt_list(src_dir, savep):
 def render_body_samples(exec_list, bg_list, mask_name, save_dir, rank_to_worldsize, save_suffix):
 
     from live2d.scrap_model import animal_ear_detected, Drawable, ImageProcessor, compose_from_drawables, VALID_BODY_PARTS_V3
-    from utils.cv import fgbg_hist_matching, quantize_image, random_crop, rle2mask, mask2rle, img_alpha_blending, resize_short_side_to, batch_save_masks, batch_load_masks
-    from utils.torch_utils import seed_everything
+    from seethrough_utils.cv import fgbg_hist_matching, quantize_image, random_crop, rle2mask, mask2rle, img_alpha_blending, resize_short_side_to, batch_save_masks, batch_load_masks
+    from seethrough_utils.torch_utils import seed_everything
 
     seed_everything(42)
 

@@ -95,7 +95,7 @@ class ProjSeg:
                 self.set_current_page_byidx(0)
 
     def load_from_txt(self, txt_path: str):
-        from utils.io_utils import load_exec_list
+        from seethrough_utils.io_utils import load_exec_list
         flist = load_exec_list(txt_path)
         pages = {}
         self.directory = osp.dirname(txt_path)

@@ -31,7 +31,7 @@ def cli():
 def test_segs(config, save_dir, shuffle):
 
     from train.dataset_seg import SemanticSegDataset
-    from utils.torch_utils import img2tensor, tensor2img
+    from seethrough_utils.torch_utils import img2tensor, tensor2img
     seed_everything(1)
 
     if save_dir is None:
@@ -74,7 +74,7 @@ def test_segs(config, save_dir, shuffle):
 def test_depth(config, save_dir, shuffle):
 
     from train.dataset_depth import DepthDataset
-    from utils.torch_utils import img2tensor, tensor2img
+    from seethrough_utils.torch_utils import img2tensor, tensor2img
 
     seed_everything(1)
 
@@ -137,8 +137,8 @@ def test_depth(config, save_dir, shuffle):
 def test_depth3d(config, save_dir, shuffle):
 
     from train.dataset_depth import DepthDataset3D
-    from utils.cv import argb2rgba, img_alpha_blending
-    from utils.torch_utils import img2tensor, tensor2img
+    from seethrough_utils.cv import argb2rgba, img_alpha_blending
+    from seethrough_utils.torch_utils import img2tensor, tensor2img
 
     seed_everything(1)
 
@@ -204,7 +204,7 @@ def test_depth3d(config, save_dir, shuffle):
 def test_layerdiff(config, save_dir, shuffle):
 
     from train.dataset_layerdiff import LayerDiffDataset
-    from utils.torch_utils import img2tensor, tensor2img
+    from seethrough_utils.torch_utils import img2tensor, tensor2img
     
     seed_everything(1)
 
@@ -257,16 +257,16 @@ def test_layerdiff(config, save_dir, shuffle):
 def test_layerdiff3d(config, save_dir, shuffle):
 
     from train.dataset_layerdiff import LayerDiffDataset3D
-    from utils.torch_utils import img2tensor, tensor2img
-    from utils.visualize import pil_draw_text
-    from utils.cv import visualize_rgba
+    from seethrough_utils.torch_utils import img2tensor, tensor2img
+    from seethrough_utils.visualize import pil_draw_text
+    from seethrough_utils.cv import visualize_rgba
     from tqdm import tqdm
-    from utils.torchcv import pad_rgb_torch
+    from seethrough_utils.torchcv import pad_rgb_torch
 
-    from modules.layerdiffuse.diffusers_kdiffusion_sdxl import KDiffusionStableDiffusionXLPipeline, UNet2DConditionModel
-    from modules.layerdiffuse.vae import vae_encode, TransparentVAEEncoder, TransparentVAEDecoder
-    from modules.layerdiffuse.utils import patch_transvae_sd
-    from utils.torch_utils import init_model_from_pretrained, tensor2img, img2tensor, seed_everything
+    from seethrough_modules.layerdiffuse.diffusers_kdiffusion_sdxl import KDiffusionStableDiffusionXLPipeline, UNet2DConditionModel
+    from seethrough_modules.layerdiffuse.vae import vae_encode, TransparentVAEEncoder, TransparentVAEDecoder
+    from seethrough_modules.layerdiffuse.utils import patch_transvae_sd
+    from seethrough_utils.torch_utils import init_model_from_pretrained, tensor2img, img2tensor, seed_everything
     from diffusers import AutoencoderKL
 
 

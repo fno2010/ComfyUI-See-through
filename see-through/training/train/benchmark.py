@@ -81,7 +81,7 @@ def semsam_benchmark(
     model=None
 ):
     
-    from modules.semanticsam import SemanticSam, Sam
+    from seethrough_modules.semanticsam import SemanticSam, Sam
 
     if save_dir is None:
         assert isinstance(config, str)
@@ -194,7 +194,7 @@ def plot_benchmark_list(
     savep
 ):
     import matplotlib.pyplot as plt
-    from utils.io_utils import json2dict
+    from seethrough_utils.io_utils import json2dict
 
     src_list = os.listdir(src_dir)
     # src_list.sort(key = lambda x: int(x.split('-')[-1]))
@@ -258,7 +258,7 @@ def depth_benchmark(
         depth = cv2.cvtColor(depth, cv2.COLOR_GRAY2RGB)
         return depth
 
-    from modules.depth_anything_v2.adapter import DepthAnythingV2, ExtendDepthAnythingV2
+    from seethrough_modules.depth_anything_v2.adapter import DepthAnythingV2, ExtendDepthAnythingV2
     from train.loss_depth import compute_metrics
 
     if save_dir is None:

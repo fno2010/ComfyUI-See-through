@@ -20,10 +20,10 @@ from seethrough_utils.io_utils import load_exec_list, find_all_imgs
 def sam_parse_body_samples(config):
 
     from live2d.scrap_model import animal_ear_detected, Drawable, VALID_BODY_PARTS_V2
-    from utils.cv import fgbg_hist_matching, quantize_image, random_crop, rle2mask, mask2rle, img_alpha_blending, resize_short_side_to, batch_save_masks, batch_load_masks
-    from utils.torch_utils import seed_everything, init_model_from_pretrained
-    from utils.visualize import visualize_segs_with_labels
-    from modules.semanticsam import SemanticSam, Sam
+    from seethrough_utils.cv import fgbg_hist_matching, quantize_image, random_crop, rle2mask, mask2rle, img_alpha_blending, resize_short_side_to, batch_save_masks, batch_load_masks
+    from seethrough_utils.torch_utils import seed_everything, init_model_from_pretrained
+    from seethrough_utils.visualize import visualize_segs_with_labels
+    from seethrough_modules.semanticsam import SemanticSam, Sam
     import torch
 
 

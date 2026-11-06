@@ -633,7 +633,7 @@ def visualize_batch(args, batch, model, vae, trans_vae_encoder, trans_vae_decode
 
 
 def merge_sd_with_lora(model):
-    from utils.torch_utils import _get_model_file, load_state_dict
+    from seethrough_utils.torch_utils import _get_model_file, load_state_dict
     model_file = _get_model_file(pretrained_model_name_or_path="lllyasviel/LayerDiffuse_Diffusers", weights_name="ld_diffusers_sdxl_attn.safetensors")
     sd_offset = load_state_dict(model_file)
 
