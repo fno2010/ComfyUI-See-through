@@ -1,0 +1,21 @@
+name: Fork checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  vendor:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Check vendor namespace
+        run: python scripts/check_vendor.py
+      - name: Compile Python sources
+        run: python -m compileall -q nodes.py see-through/seethrough_modules see-through/seethrough_utils see-through/seethrough_annotators
