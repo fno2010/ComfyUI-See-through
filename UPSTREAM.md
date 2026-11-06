@@ -38,8 +38,22 @@ The fork has been import-tested against:
 - A pre-existing fake `utils` module in `sys.modules` no longer interferes
   with node import; all seven nodes register.
 
-Model inference has not yet been run in this fork because the LayerDiff/Marigold
-weights are not installed locally.
+### Inference smoke
+
+The fork was run end-to-end on the upstream test image with the downloaded
+LayerDiff3D and Marigold weights:
+
+- GB10, torch 2.13.0+cu130, diffusers 0.37.0
+- 512 px, 10 diffusion steps, no group offload, no NF4
+- model load: LayerDiff 14.7 s, Marigold 5.5 s
+- GenerateLayers: 73.5 s, 24 raw layers
+- GenerateDepth: 19.9 s, 23 depth maps
+- PostProcess: 20 layers
+- SavePSD: layer PNGs + JSON succeeded
+
+This is a smoke run, not a quality or performance benchmark. The official
+1280 px / 30-step profile still needs measurement. PSD generation is currently
+still browser-side (`ag-psd`); server-side PSD export is not implemented yet.
 
 ## Syncing upstream
 
