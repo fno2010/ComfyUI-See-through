@@ -64,6 +64,9 @@ VALID_BODY_PARTS_V2 = [
     "bottomwear", "legwear", "footwear", "tail", "wings", "objects",
 ]
 
+# Tags that are unsafe to generate when the character clearly lacks them.
+EXCLUDABLE_BODY_TAGS = frozenset({"tail", "wings", "objects"})
+
 folder_paths.add_model_folder_path("SeeThrough", os.path.join(folder_paths.models_dir, "SeeThrough"))
 
 
@@ -467,6 +470,13 @@ class SeeThrough_GenerateLayers:
                 "resolution": ("INT", {"default": 1280, "min": 512, "max": 2048, "step": 64}),
                 "num_inference_steps": ("INT", {"default": 30, "min": 1, "max": 100}),
             },
+            "optional": {
+                "exclude_tags": ("STRING", {
+                    "default": "",
+                    "multiline": False,
+                    "tooltip": "Comma-separated optional body tags to omit from the outputs: wings,tail,objects. The fixed 13-frame diffusion still runs. Use only when the input character clearly lacks them.",
+                }),
+            },
         }
 
     RETURN_TYPES = ("SEETHROUGH_LAYERS", "IMAGE")
@@ -474,7 +484,7 @@ class SeeThrough_GenerateLayers:
     FUNCTION = "generate"
     CATEGORY = "SeeThrough"
 
-    def generate(self, image, layerdiff_model, seed=42, resolution=1280, num_inference_steps=30):
+    def generate(self, image, layerdiff_model, seed=42, resolution=1280, num_inference_steps=30, exclude_tags=""):
         pipeline = layerdiff_model
         device = mm.get_torch_device()
         offload = torch.device("cpu")
@@ -514,6 +524,19 @@ class SeeThrough_GenerateLayers:
             body_tags = ["front hair", "back hair", "head", "neck", "neckwear",
                          "topwear", "handwear", "bottomwear", "legwear", "footwear",
                          "tail", "wings", "objects"]
+            requested_excludes = {
+                tag.strip().lower()
+                for tag in str(exclude_tags or "").split(",")
+                if tag.strip()
+            }
+            invalid_excludes = requested_excludes - EXCLUDABLE_BODY_TAGS
+            if invalid_excludes:
+                raise ValueError(
+                    "SeeThrough exclude_tags only accepts optional body tags "
+                    f"{sorted(EXCLUDABLE_BODY_TAGS)}; got {sorted(invalid_excludes)}"
+                )
+            # The v3 UNet has a fixed 13-frame body group; keep all frames for
+            # the diffusion pass, then omit excluded tags from the outputs.
             head_tags = ["headwear", "face", "irides", "eyebrow", "eyewhite",
                          "eyelash", "eyewear", "ears", "earwear", "nose", "mouth"]
             body_embeds, body_pooled = encode_fn(body_tags)
@@ -553,9 +576,10 @@ class SeeThrough_GenerateLayers:
                            fullpage=fullpage, group_index=0)
             _log_vram("v3 body diffusion complete")
             for rst, tag in zip(out.images, body_tags):
-                layer_dict[tag] = rst
+                if tag not in requested_excludes:
+                    layer_dict[tag] = rst
 
-            head_img = out.images[2]
+            head_img = out.images[body_tags.index("head")]
             nz = cv2.findNonZero((head_img[..., -1] > 15).astype(np.uint8))
             if nz is not None:
                 hx0, hy0, hw, hh = cv2.boundingRect(nz)

@@ -27,6 +27,10 @@ ComfyUI custom-node distribution is expected to be a self-contained directory.
   torchvision >= 0.23 interpolation compatibility onto upstream `df019de`.
 - Kept upstream scheduler configuration and process-cuts fixes from
   `df019de` instead of the older vendored snapshot.
+- Added optional `exclude_tags` to `SeeThrough_GenerateLayers` so callers can
+  omit optional body tags (`wings`, `tail`, `objects`) from the generated layer
+  set. The v3 UNet keeps its fixed 13-frame diffusion pass, so this is an
+  output-level filter, not a compute optimization.
 
 ## Verification
 
